@@ -1,37 +1,24 @@
-let draggedElement = null;
+let dragged;
 
-const images = document.querySelectorAll(".image");
+document.addEventListener("dragstart", function(event) {
+  dragged = event.target;
+  event.target.style.opacity = .5;
+}, false);
 
-images.forEach((image) => {
-  image.addEventListener("dragstart", (e) => {
-    draggedElement = e.target;
-    e.dataTransfer.setData("text", draggedElement.id);
-  });
+document.addEventListener("dragend", function(event) {
+  event.target.style.opacity = "";
+}, false);
 
-  image.addEventListener("dragend", () => {
-    draggedElement = null;
-  });
+document.addEventListener("dragover", function(event) {
+  event.preventDefault();
+}, false);
 
-  image.addEventListener("dragover", (e) => {
-    e.preventDefault();
-  });
-
-  image.addEventListener("drop", (e) => {
-    e.preventDefault();
-    
-    const target = e.target;
-    if (target !== draggedElement) {
-      const tempBg = draggedElement.style.backgroundImage;
-      draggedElement.style.backgroundImage = target.style.backgroundImage;
-      target.style.backgroundImage = tempBg;
-      
-      const tempText = draggedElement.innerHTML;
-      draggedElement.innerHTML = target.innerHTML;
-      target.innerHTML = tempText;
-
-      const tempId = draggedElement.id;
-      draggedElement.id = target.id;
-      target.id = tempId;
-    }
-  });
-});
+document.addEventListener("drop", function(event) {
+  event.preventDefault();
+  if (event.target.className == "dropzone") {
+    event.target.style.background = "";
+    let tmp = event.target.innerHTML;
+    event.target.innerHTML = dragged.innerHTML;
+    dragged.innerHTML = tmp;
+  }
+}, false);
