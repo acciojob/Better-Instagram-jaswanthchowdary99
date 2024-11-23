@@ -1,5 +1,3 @@
-// Write code here
-
 let draggedElement = null;
 
 const images = document.querySelectorAll(".image");
@@ -7,9 +5,10 @@ const images = document.querySelectorAll(".image");
 images.forEach((image) => {
   image.addEventListener("dragstart", (e) => {
     draggedElement = e.target;
+    e.dataTransfer.setData("text", draggedElement.id);
   });
 
-  image.addEventListener("dragend", (e) => {
+  image.addEventListener("dragend", () => {
     draggedElement = null;
   });
 
@@ -19,15 +18,18 @@ images.forEach((image) => {
 
   image.addEventListener("drop", (e) => {
     e.preventDefault();
+    
+    const target = e.target;
+    if (target !== draggedElement) {
+      const draggedElementId = draggedElement.id;
+      const targetId = target.id;
+      
+      const tempBg = draggedElement.style.backgroundImage;
+      draggedElement.style.backgroundImage = target.style.backgroundImage;
+      target.style.backgroundImage = tempBg;
 
-    if (draggedElement && draggedElement !== e.target) {
-      const tempText = draggedElement.innerHTML;
-      draggedElement.innerHTML = e.target.innerHTML;
-      e.target.innerHTML = tempText;
-
-      const tempId = draggedElement.id;
-      draggedElement.id = e.target.id;
-      e.target.id = tempId;
+      draggedElement.id = targetId;
+      target.id = draggedElementId;
     }
   });
 });
