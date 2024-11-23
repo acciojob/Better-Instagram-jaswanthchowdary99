@@ -21,15 +21,17 @@ images.forEach((image) => {
     
     const target = e.target;
     if (target !== draggedElement) {
-      const draggedElementId = draggedElement.id;
-      const targetId = target.id;
-      
       const tempBg = draggedElement.style.backgroundImage;
       draggedElement.style.backgroundImage = target.style.backgroundImage;
       target.style.backgroundImage = tempBg;
+      
+      const tempText = draggedElement.innerHTML;
+      draggedElement.innerHTML = target.innerHTML;
+      target.innerHTML = tempText;
 
-      draggedElement.id = targetId;
-      target.id = draggedElementId;
+      const tempId = draggedElement.id;
+      draggedElement.id = target.id;
+      target.id = tempId;
     }
   });
 });
